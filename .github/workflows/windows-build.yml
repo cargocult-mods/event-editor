@@ -25,6 +25,7 @@ jobs:
         shell: powershell
         run: >
           pyinstaller --noconfirm --windowed --name EventEditor
+          --paths .
           --add-data "eventeditor/assets;eventeditor/assets"
           --hidden-import PyQt5.QtWebEngineWidgets
           eventeditor/__main__.py
