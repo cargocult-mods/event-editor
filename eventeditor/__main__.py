@@ -18,10 +18,7 @@ import eventeditor.util as util
 import PyQt5.QtCore as qc # type: ignore
 import PyQt5.QtGui as qg # type: ignore
 import PyQt5.QtWidgets as q # type: ignore
-try:
-    from . import _version
-except Exception:
-    from eventeditor import _version
+import eventeditor._version as _version
 
 class MainWindow(q.QMainWindow):
     def __init__(self, args) -> None:

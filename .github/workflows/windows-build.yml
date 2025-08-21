@@ -26,9 +26,9 @@ jobs:
         run: |
           @"
           import sys
-          from eventeditor.__main__ import main
+          import eventeditor.__main__ as entry
           if __name__ == '__main__':
-              main()
+              entry.main()
           "@ | Set-Content -Path launcher.py -NoNewline
 
       - name: Build EXE with PyInstaller
