@@ -13,11 +13,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.8'
 
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install "PyQt5==5.14.*" "PyQtWebEngine==5.14.*"
           pip install .
           pip install pyinstaller==5.13.2 pyinstaller-hooks-contrib==2022.15
 
@@ -25,10 +26,15 @@ jobs:
         shell: powershell
         run: |
           @"
-          import sys
-          import eventeditor.__main__ as entry
-          if __name__ == '__main__':
+          import os, sys, traceback
+          os.environ.setdefault('QTWEBENGINE_DISABLE_SANDBOX', '1')
+          try:
+              import eventeditor.__main__ as entry
               entry.main()
+          except Exception as e:
+              with open('startup_error.log', 'w', encoding='utf-8') as f:
+                  traceback.print_exc(file=f)
+              raise
           "@ | Set-Content -Path launcher.py -NoNewline
 
       - name: Build EXE with PyInstaller
