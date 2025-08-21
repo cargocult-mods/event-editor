@@ -35,14 +35,7 @@ def write_flow(path: str, flow: evfl.evfl.EventFlow):
         raise
 
 def get_path(rel_path: str):
-    base = os.path.dirname(os.path.realpath(__file__))
-    try:
-        import sys
-        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-            base = sys._MEIPASS  # type: ignore
-    except Exception:
-        pass
-    return os.path.join(base, rel_path)
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), rel_path)
 
 def get_event_type(event: evfl.event.Event) -> str:
     if isinstance(event.data, evfl.event.ActionEvent):
