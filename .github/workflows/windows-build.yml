@@ -22,11 +22,12 @@ jobs:
           pip install pyinstaller
 
       - name: Build EXE with PyInstaller
-        run: |
-          pyinstaller --noconfirm --windowed --name EventEditor \
-            --add-data "eventeditor/assets;eventeditor/assets" \
-            --hidden-import PyQt5.QtWebEngineWidgets \
-            eventeditor/__main__.py
+        shell: powershell
+        run: >
+          pyinstaller --noconfirm --windowed --name EventEditor
+          --add-data "eventeditor/assets;eventeditor/assets"
+          --hidden-import PyQt5.QtWebEngineWidgets
+          eventeditor/__main__.py
 
       - name: Archive artifact
         run: |
