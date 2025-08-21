@@ -75,6 +75,7 @@ function handleNodeContextMenu(id) {
       if (classes.includes('fork')) {
         addAction('Edit branches...', () => widget.editForkBranches(idx));
       }
+      addAction('Edit parents...', () => widget.editParents(idx));
       if (!classes.includes('join')) {
         actions.push({ divider: true });
       }

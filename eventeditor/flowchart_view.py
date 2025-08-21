@@ -96,6 +96,10 @@ class FlowchartWebObject(qc.QObject):
     def editForkBranches(self, node_id: int):
         self.view.webEditForkBranches(int(node_id))
 
+    @qc.pyqtSlot(int)
+    def editParents(self, node_id: int):
+        self.view.webEditParents(int(node_id))
+
 class FlowchartView(q.QWidget):
     selectRequested = qc.pyqtSignal(int)
     eventNameVisibilityChanged = qc.pyqtSignal(bool)
@@ -132,6 +136,7 @@ class FlowchartView(q.QWidget):
         self.view.page().setWebChannel(self.channel)
         self.view.page().setBackgroundColor(qg.QColor(0x38, 0x38, 0x38));
         self.view.setUrl(qc.QUrl.fromLocalFile(get_path('assets/index.html')))
+        
 
         self.entry_point_view = q.QListView(self)
         self.ep_proxy_model = qc.QSortFilterProxyModel(self)
@@ -557,6 +562,17 @@ class FlowchartView(q.QWidget):
         dialog.finished.connect(lambda: self.web_object.actionProhibitionChanged.emit(False))
         dialog.chooserEventDoubleClicked.connect(self.selectRequested)
         self.eventSelected.connect(dialog.chooserSelectSignal)
+        dialog.show()
+
+    def webEditParents(self, event_idx: int) -> None:
+        if event_idx < 0:
+            return
+        assert self.flow_data.flow and self.flow_data.flow.flowchart
+        event = self.flow_data.flow.flowchart.events[event_idx]
+        from eventeditor.event_parent_edit_dialog import EditParentsDialog
+        self.web_object.actionProhibitionChanged.emit(True)
+        dialog = EditParentsDialog(self, event, self.flow_data)
+        dialog.finished.connect(lambda: self.web_object.actionProhibitionChanged.emit(False))
         dialog.show()
 
     def addFork(self) -> None:
