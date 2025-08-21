@@ -22,7 +22,7 @@ jobs:
           ./venv/Scripts/python -m pip install --upgrade pip
           ./venv/Scripts/python -m pip install .
 
-      - name: Create launcher script
+      - name: Create launcher scripts
         shell: powershell
         run: |
           @"
@@ -30,8 +30,22 @@ jobs:
           setlocal
           set "HERE=%~dp0"
           set "QTWEBENGINE_DISABLE_SANDBOX=1"
-          "%HERE%venv\Scripts\python.exe" -m eventeditor %*
+          set "QT_OPENGL=software"
+          "%HERE%venv\Scripts\python.exe" -m eventeditor %* 1>"%HERE%StartEventEditor.log" 2>&1
           "@ | Set-Content -Path StartEventEditor.bat -NoNewline
+          
+          @"
+          @echo off
+          setlocal
+          set "HERE=%~dp0"
+          set "QTWEBENGINE_DISABLE_SANDBOX=1"
+          set "QT_OPENGL=software"
+          echo Launching EventEditor... (logs will appear below if it crashes)
+          "%HERE%venv\Scripts\python.exe" -m eventeditor %*
+          echo.
+          echo If the app did not appear, check StartEventEditor.log in this folder.
+          pause
+          "@ | Set-Content -Path StartEventEditor_console.bat -NoNewline
 
       - name: Compute build id
         shell: bash
