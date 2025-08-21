@@ -18,14 +18,7 @@ import eventeditor.util as util
 import PyQt5.QtCore as qc # type: ignore
 import PyQt5.QtGui as qg # type: ignore
 import PyQt5.QtWidgets as q # type: ignore
-try:
-	import eventeditor._version as _version
-except Exception:
-	class _VersionFallback:
-		@staticmethod
-		def get_versions():
-			return {'version': 'dev', 'full-revisionid': 'unknown'}
-	_version = _VersionFallback()
+from . import _version
 
 class MainWindow(q.QMainWindow):
     def __init__(self, args) -> None:

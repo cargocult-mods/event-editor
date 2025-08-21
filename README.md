@@ -4,16 +4,6 @@
 
 Install Python 3.6+ (**64 bit version**) and PyQt5, then run `pip install eventeditor`.
 
-### Windows prebuilt executable
-
-If you prefer not to install Python:
-
-1. Go to GitHub Actions for your fork and run the "Build Windows EXE" workflow (Workflow dispatch).
-2. After it completes, download the artifact named "EventEditor-Windows".
-3. Extract `EventEditor-Windows.zip` and run `EventEditor.exe`.
-
-This prebuilt includes the new "Edit parents..." feature in the flowchart context menu.
-
 ### Configuration
 
 The configuration file is stored:
