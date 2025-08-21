@@ -47,8 +47,13 @@ jobs:
         run: |
           Get-ChildItem -Recurse dist/EventEditor | ForEach-Object { $_.FullName }
 
+      - name: Remove any stray zips
+        shell: powershell
+        run: |
+          Get-ChildItem -Path dist -Filter *.zip -Recurse | Remove-Item -Force -ErrorAction SilentlyContinue
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EventEditor-Windows
-          path: dist/EventEditor/*
+          name: EventEditor-Windows-Files
+          path: dist/EventEditor
