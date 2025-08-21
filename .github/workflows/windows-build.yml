@@ -13,13 +13,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.9'
 
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
           pip install .
-          pip install pyinstaller
+          pip install pyinstaller==5.13.2 pyinstaller-hooks-contrib==2022.15
 
       - name: Create launcher script
         shell: powershell
@@ -34,12 +34,15 @@ jobs:
       - name: Build EXE with PyInstaller
         shell: powershell
         run: >
-          pyinstaller --noconfirm --windowed --name EventEditor
+          pyinstaller --noconfirm --windowed --onedir --name EventEditor
           --paths .
           --collect-all eventeditor
           --collect-all evfl
+          --collect-submodules PyQt5
           --add-data "eventeditor/assets;eventeditor/assets"
           --hidden-import PyQt5.QtWebEngineWidgets
+          --hidden-import PyQt5.QtWebEngineCore
+          --hidden-import PyQt5.QtWebChannel
           launcher.py
 
       - name: Compute build id
