@@ -21,6 +21,16 @@ jobs:
           pip install .
           pip install pyinstaller
 
+      - name: Create launcher script
+        shell: powershell
+        run: |
+          @"
+          import sys
+          from eventeditor.__main__ import main
+          if __name__ == '__main__':
+              main()
+          "@ | Set-Content -Path launcher.py -NoNewline
+
       - name: Build EXE with PyInstaller
         shell: powershell
         run: >
@@ -28,7 +38,7 @@ jobs:
           --paths .
           --add-data "eventeditor/assets;eventeditor/assets"
           --hidden-import PyQt5.QtWebEngineWidgets
-          eventeditor/__main__.py
+          launcher.py
 
       - name: Archive artifact
         run: |
