@@ -42,10 +42,20 @@ jobs:
           --hidden-import PyQt5.QtWebEngineWidgets
           launcher.py
 
+      - name: Compute build id
+        shell: bash
+        run: echo "BUILD_ID=${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Rename output folder
+        shell: powershell
+        run: |
+          Rename-Item -Path dist/EventEditor -NewName ("EventEditor-" + $env:BUILD_ID)
+          Set-Content -Path ("dist/EventEditor-" + $env:BUILD_ID + "/BUILD_INFO.txt") -Value ("BUILD_ID=" + $env:BUILD_ID)
+
       - name: Show build outputs
         shell: powershell
         run: |
-          Get-ChildItem -Recurse dist/EventEditor | ForEach-Object { $_.FullName }
+          Get-ChildItem -Recurse ("dist/EventEditor-" + $env:BUILD_ID) | ForEach-Object { $_.FullName }
 
       - name: Remove any stray zips
         shell: powershell
@@ -55,5 +65,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EventEditor-Windows-Files
-          path: dist/EventEditor
+          name: EventEditor-Windows-${{ env.BUILD_ID }}
+          path: dist/EventEditor-${{ env.BUILD_ID }}
