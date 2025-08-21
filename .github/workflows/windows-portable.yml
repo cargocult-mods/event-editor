@@ -1,0 +1,57 @@
+name: Build Windows Portable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows-portable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Create virtual environment and install package
+        shell: powershell
+        run: |
+          python -m venv venv
+          ./venv/Scripts/python -m pip install --upgrade pip
+          ./venv/Scripts/python -m pip install .
+
+      - name: Create launcher script
+        shell: powershell
+        run: |
+          @"
+          @echo off
+          setlocal
+          set "HERE=%~dp0"
+          set "QTWEBENGINE_DISABLE_SANDBOX=1"
+          "%HERE%venv\Scripts\python.exe" -m eventeditor %*
+          "@ | Set-Content -Path StartEventEditor.bat -NoNewline
+
+      - name: Compute build id
+        shell: bash
+        run: echo "BUILD_ID=${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Prepare portable folder
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path ("EventEditor-Portable-" + $env:BUILD_ID) | Out-Null
+          Move-Item venv ("EventEditor-Portable-" + $env:BUILD_ID + "\venv")
+          Move-Item StartEventEditor.bat ("EventEditor-Portable-" + $env:BUILD_ID + "\StartEventEditor.bat")
+          Set-Content -Path ("EventEditor-Portable-" + $env:BUILD_ID + "\BUILD_INFO.txt") -Value ("BUILD_ID=" + $env:BUILD_ID)
+
+      - name: Show contents
+        shell: powershell
+        run: |
+          Get-ChildItem -Recurse ("EventEditor-Portable-" + $env:BUILD_ID) | ForEach-Object { $_.FullName }
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EventEditor-Portable-${{ env.BUILD_ID }}
+          path: EventEditor-Portable-${{ env.BUILD_ID }}
