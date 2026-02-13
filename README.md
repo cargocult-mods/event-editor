@@ -1,3 +1,42 @@
+# EventEditor with Timeline Support
+
+> **This fork adds timeline editing support!**
+> 
+> Use `python -m eventeditor.timeline` to edit timeline files (.bfevfl)
+
+## Timeline Editor Features
+
+- View timeline clips on a horizontal timeline
+- Edit clip properties (name, duration, start time)
+- Add and delete clips
+- Zoom in/out
+- Save changes back to file
+
+## Installation
+```bash
+git clone https://github.com/cargocult-mods/event-editor.git
+cd event-editor
+pip install -r requirements.txt
+```
+
+## Usage
+
+**Flowchart Editor (original):**
+```bash
+python -m eventeditor
+```
+
+**Timeline Editor (new):**
+```bash
+python -m eventeditor.timeline
+```
+
+Or double-click `START_TIMELINE_EDITOR.bat` on Windows!
+
+---
+
+*Original README below:*
+
 ## EventEditor for Breath of the Wild
 
 ### Setup
